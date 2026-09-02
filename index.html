@@ -11,15 +11,12 @@ body{
     background:#ffffff;
     font-family: -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
 }
-
-/* 顶部视频容器，16:9横版比例，顶部撑满屏幕 */
 .page-header-box{
     position:relative;
     overflow:hidden;
     padding-top:calc(100% / 16 * 9);
     background:#000000;
 }
-/* 背景视频铺满整个头部区域 */
 .page-header-video{
     position:absolute;
     left:0;
@@ -29,7 +26,16 @@ body{
     object-fit:cover;
     z-index:0;
 }
-/* 黑色半透明遮罩，保证文字看得清 */
+.header-fallback{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:0;
+    display:none;
+}
 .page-header-overlay{
     position:absolute;
     left:0;
@@ -66,8 +72,6 @@ body{
     border-radius:0.2rem;
     font-size:0.32rem;
 }
-
-/* 俱乐部横幅样式 */
 .banner-container{
     width:100%;
     position:relative;
@@ -148,9 +152,10 @@ const pageConfig = {
 </script>
 
 <div class="page-header-box">
-    <video class="page-header-video" autoplay muted loop playsinline>
+    <video id="mainVideo" class="page-header-video" autoplay muted loop playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" preload="auto">
         <source id="videoSrc" type="video/mp4">
     </video>
+    <img class="header-fallback" id="headerFallback">
     <div class="page-header-overlay"></div>
     <div class="page-header-text-wrap">
         <div class="page-main-title">石昊电竞打手入驻</div>
@@ -180,7 +185,6 @@ const pageConfig = {
     <div class="section-title">考核群</div>
 </div>
 
-<!-- 俱乐部图片移到考核群板块下方 -->
 <div class="banner-container">
     <img id="bannerPic">
 </div>
@@ -192,17 +196,55 @@ const pageConfig = {
 <audio id="bgMusic" loop preload="auto">
 
 <script>
+const bannerPic = document.getElementById("bannerPic");
+const noticeBox = document.getElementById("noticeBox");
+const ruleBox = document.getElementById("ruleBox");
+const videoSrc = document.getElementById("videoSrc");
+const pageVideo = document.getElementById("mainVideo");
+const headerFallback = document.getElementById("headerFallback");
+const linkBtn = document.getElementById("linkBtn");
+const audioDom = document.getElementById("bgMusic");
+
 bannerPic.src = pageConfig.bannerImg;
 noticeBox.innerText = pageConfig.noticeContent;
 ruleBox.innerText = pageConfig.ruleContent;
 videoSrc.src = pageConfig.videoUrl;
+headerFallback.src = pageConfig.bannerImg;
+pageVideo.load();
 linkBtn.innerText = pageConfig.btnText;
-
-const audioDom = document.getElementById("bgMusic");
 audioDom.src = pageConfig.audioUrl;
+
 let musicPlay = false;
 
-document.getElementById('linkBtn').onclick = function(){
+//微信JSBridge就绪后强制播放（适配微信/豆包内置浏览器）
+function autoPlayVideo(){
+    pageVideo.play().catch(()=>{
+        pageVideo.style.display = "none";
+        headerFallback.style.display = "block";
+    })
+}
+if(window.WeixinJSBridge){
+    WeixinJSBridge.invoke('getNetworkType',{},autoPlayVideo);
+}else{
+    document.addEventListener("WeixinJSBridgeReady", autoPlayVideo, false);
+}
+
+//视频播放结束手动重置循环（修复IOS loop失效bug）
+pageVideo.addEventListener('ended',()=>{
+    pageVideo.currentTime = 0;
+    pageVideo.play();
+})
+
+//加载失败兜底显示图片
+pageVideo.addEventListener('error', () => {
+    pageVideo.style.display = "none";
+    headerFallback.style.display = "block";
+})
+
+//首次触摸页面尝试启动播放（安卓微信兼容）
+document.body.addEventListener('touchstart', autoPlayVideo, {once:true})
+
+linkBtn.onclick = function(){
     window.location.href = pageConfig.jumpUrl;
 };
 document.getElementById("musicCtrlBtn").onclick = function(){
