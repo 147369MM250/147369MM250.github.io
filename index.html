@@ -24,7 +24,7 @@ body{
     width:100%;
     height:100%;
     object-fit:cover;
-    z-index:0;
+    z-index:1;
 }
 .header-fallback{
     position:absolute;
@@ -34,7 +34,6 @@ body{
     height:100%;
     object-fit:cover;
     z-index:0;
-    display:none;
 }
 .page-header-overlay{
     position:absolute;
@@ -43,13 +42,13 @@ body{
     width:100%;
     height:100%;
     background:rgba(0,0,0,0.4);
-    z-index:1;
+    z-index:2;
 }
 .page-header-text-wrap{
     position:absolute;
     width:100%;
     top:0.2rem;
-    z-index:2;
+    z-index:3;
 }
 .page-main-title{
     background:transparent;
@@ -147,15 +146,16 @@ const pageConfig = {
     jumpUrl:"https://qun.qq.com/universal-share/share?ac=1&authKey=ms4pnPs9SoYtEgzxSX7MFu7H%2BLx%2FNnikfQ81RqMjfizcf2Xn8UpEX8uisFXUZOKZ&busi_data=eyJncm91cENvZGUiOiIyNDExNjI0ODkiLCJ0b2tlbiI6InByVWt2Z3VhbjlPdzlWMXZZdTlEUGJXbldCcmFqYWxEbzZnYmI4WmpPK3BadmVoTWM4ai9wWHYyZWZXdWNveWwiLCJ1aW4iOiIzOTA2NzUxNjcxIn0%3D&data=cT6l_HcOK_K3axPR39tEjtdFnDaNaSCTAiuXo-gSaURNgyZsmpcAnJHwpfzqwFfJK7Yj9xu_dOG11uZ177xJhg&svctype=4&tempid=h5_group_info",
     btnText:"点击加入考核群",
     audioUrl:"https://pan.29o.cn/view.php/aa9bc85e6edd6e0abe40888ecee6216a.mp3",
-    videoUrl:"http://cccimg.com/view.php/8de6cfba855939b0b024737bf3805e40.mp4"
+    videoUrl:"http://cccimg.com/view.php/8de6cfba855939b0b024737bf3805e40.mp4",
+    headerFallbackImg:"http://cccimg.com/view.php/072d6566eb605bb0ac92528feeac4b1c.jpg"
 }
 </script>
 
 <div class="page-header-box">
+    <img class="header-fallback" id="headerFallback">
     <video id="mainVideo" class="page-header-video" autoplay muted loop playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" preload="auto">
         <source id="videoSrc" type="video/mp4">
     </video>
-    <img class="header-fallback" id="headerFallback">
     <div class="page-header-overlay"></div>
     <div class="page-header-text-wrap">
         <div class="page-main-title">石昊电竞打手入驻</div>
@@ -209,40 +209,40 @@ bannerPic.src = pageConfig.bannerImg;
 noticeBox.innerText = pageConfig.noticeContent;
 ruleBox.innerText = pageConfig.ruleContent;
 videoSrc.src = pageConfig.videoUrl;
-headerFallback.src = pageConfig.bannerImg;
+headerFallback.src = pageConfig.headerFallbackImg;
 pageVideo.load();
 linkBtn.innerText = pageConfig.btnText;
 audioDom.src = pageConfig.audioUrl;
 
 let musicPlay = false;
 
-//微信JSBridge就绪后强制播放（适配微信/豆包内置浏览器）
-function autoPlayVideo(){
+function tryPlay(){
     pageVideo.play().catch(()=>{
         pageVideo.style.display = "none";
-        headerFallback.style.display = "block";
     })
 }
 if(window.WeixinJSBridge){
-    WeixinJSBridge.invoke('getNetworkType',{},autoPlayVideo);
+    WeixinJSBridge.invoke('getNetworkType',{},tryPlay);
 }else{
-    document.addEventListener("WeixinJSBridgeReady", autoPlayVideo, false);
+    document.addEventListener("WeixinJSBridgeReady", tryPlay, false);
 }
 
-//视频播放结束手动重置循环（修复IOS loop失效bug）
 pageVideo.addEventListener('ended',()=>{
     pageVideo.currentTime = 0;
     pageVideo.play();
 })
 
-//加载失败兜底显示图片
 pageVideo.addEventListener('error', () => {
     pageVideo.style.display = "none";
-    headerFallback.style.display = "block";
 })
 
-//首次触摸页面尝试启动播放（安卓微信兼容）
-document.body.addEventListener('touchstart', autoPlayVideo, {once:true})
+setTimeout(()=>{
+    if(pageVideo.readyState < 2){
+        pageVideo.style.display = "none";
+    }
+},2500)
+
+document.body.addEventListener('touchstart', tryPlay, {once:true})
 
 linkBtn.onclick = function(){
     window.location.href = pageConfig.jumpUrl;
