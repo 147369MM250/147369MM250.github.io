@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>跑刀代肝 · 价目表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   主题变量（真正想改颜色，改下面 CONFIG 里的 accent 即可）
+   ============================================================ */
+:root{
+  --accent:#00e8ff;
+  --accent2:#ff7a1a;
+  --bg:#05070b;
+  --panel:#0c1219;
+  --panel2:#080d13;
+  --line:rgba(0,232,255,.16);
+  --text:#e9f7ff;
+  --muted:#7d93a8;
+  --font:'Orbitron','Rajdhani',system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  --mx:50%;
+  --my:20%;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--font);
+  min-height:100vh;overflow-x:hidden;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+/* ---------- 背景：网格 + 光晕 + 扫描线 ---------- */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,232,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,232,255,.055) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 78%);
+}
+.bg-glow{
+  position:fixed;inset:0;z-index:0;pointer-events:none;transition:background .3s;
+  background:radial-gradient(420px circle at var(--mx) var(--my),rgba(0,232,255,.10),transparent 70%);
+}
+.scan{
+  position:fixed;left:0;right:0;height:140px;z-index:1;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,rgba(0,232,255,.055),transparent);
+  animation:scan 7s linear infinite;
+}
+@keyframes scan{0%{top:-140px}100%{top:110%}}
+/* ---------- 顶栏 ---------- */
+header{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px clamp(16px,4vw,48px);
+  background:rgba(5,7,11,.72);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.14em;font-size:14px}
+.logo .dot{
+  width:10px;height:10px;background:var(--accent);border-radius:2px;
+  box-shadow:0 0 12px var(--accent);animation:blink 1.6s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.head-right{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);letter-spacing:.1em}
+.live{display:flex;align-items:center;gap:6px;color:#6dff9e}
+.live i{width:7px;height:7px;border-radius:50%;background:#6dff9e;box-shadow:0 0 10px #6dff9e;animation:blink 1.2s infinite}
+/* ---------- Hero ---------- */
+.wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.hero{padding:clamp(48px,9vw,96px) 0 26px;text-align:center}
+.kicker{
+  display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.3em;
+  color:var(--accent);border:1px solid var(--line);padding:7px 14px;border-radius:100px;
+  background:rgba(0,232,255,.05);margin-bottom:22px;
+}
+h1{
+  font-size:clamp(30px,7vw,66px);font-weight:900;line-height:1.05;letter-spacing:.02em;
+  background:linear-gradient(100deg,#fff 10%,var(--accent) 45%,var(--accent2) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(0,232,255,.22));
+}
+.hero p.sub{margin-top:16px;color:var(--muted);font-size:clamp(13px,2.4vw,17px);letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:26px}
+.chip{
+  font-size:12px;letter-spacing:.08em;color:#bcd7e8;padding:7px 13px;
+  border:1px solid rgba(255,255,255,.1);border-radius:4px;background:rgba(255,255,255,.03);
+}
+.chip::before{content:"◆";color:var(--accent);margin-right:7px;font-size:9px}
+/* ---------- 视图切换 ---------- */
+.bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin:34px 0 18px;padding-bottom:12px;border-bottom:1px solid var(--line);flex-wrap:wrap;
+}
+.bar .t{font-size:12px;letter-spacing:.24em;color:var(--muted)}
+.seg{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:rgba(255,255,255,.02)}
+.seg button{
+  font-family:var(--font);font-size:12px;letter-spacing:.1em;color:var(--muted);
+  background:transparent;border:0;padding:9px 16px;cursor:pointer;transition:.2s;
+}
+.seg button.on{color:#04121a;background:var(--accent);font-weight:700}
+/* ---------- 分组标题 ---------- */
+.group{margin-bottom:38px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.group-head h2{
+  font-size:clamp(16px,3vw,21px);font-weight:900;letter-spacing:.1em;
+  padding-left:13px;position:relative;
+}
+.group-head h2::before{
+  content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;
+  background:linear-gradient(var(--accent),var(--accent2));box-shadow:0 0 12px var(--accent);
+}
+.group-tag{
+  font-size:11px;letter-spacing:.14em;color:var(--accent2);
+  border:1px solid rgba(255,122,26,.35);background:rgba(255,122,26,.07);
+  padding:4px 9px;border-radius:3px;
+}
+/* ---------- 卡片 ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:18px}
+.card{
+  position:relative;padding:24px 22px 22px;border:1px solid var(--line);
+  background:linear-gradient(165deg,var(--panel),var(--panel2));
+  transition:transform .28s cubic-bezier(.2,.8,.3,1),box-shadow .28s,border-color .28s;
+  transform-style:preserve-3d;
+}
+.card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(0,232,255,.6);
+  box-shadow:0 18px 46px -18px rgba(0,232,255,.55),0 0 0 1px rgba(0,232,255,.18) inset;
+}
+.card.hot{border-color:rgba(255,122,26,.45)}
+.card.hot::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,var(--accent2),transparent);
+}
+/* HUD 四角 */
+.corner{position:absolute;width:14px;height:14px;border:2px solid var(--accent);opacity:.65;transition:.28s}
+.card:hover .corner{opacity:1;width:20px;height:20px}
+.corner.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.corner.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
+.corner.bl{bottom:-1px;left:-1px;border-right:0;border-top:0}
+.corner.br{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.amount{
+  font-size:clamp(22px,4vw,30px);font-weight:900;letter-spacing:.03em;
+  background:linear-gradient(180deg,#fff,#8fd8ee);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.pill{
+  font-size:10px;letter-spacing:.14em;padding:4px 9px;border-radius:3px;
+  color:#04121a;background:var(--accent2);font-weight:700;white-space:nowrap;
+}
+.card:not(.hot) .pill{background:var(--accent)}
+.row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 0;border-top:1px dashed rgba(255,255,255,.08);
+  font-size:13px;letter-spacing:.05em;
+}
+.row .lbl{color:var(--muted)}
+.row .val{color:#cfe9f6;font-weight:700}
+.row .val.acc{color:var(--accent)}
+.price{display:flex;align-items:baseline;gap:6px;margin:16px 0 4px}
+.price .num{
+  font-size:clamp(42px,9vw,58px);font-weight:900;line-height:1;letter-spacing:-.02em;
+  color:#fff;text-shadow:0 0 28px rgba(0,232,255,.5);
+}
+.price .unit{font-size:14px;color:var(--muted);letter-spacing:.1em}
+.cta{
+  display:block;margin-top:20px;text-align:center;text-decoration:none;
+  padding:13px;font-size:13px;font-weight:700;letter-spacing:.18em;
+  color:#04121a;background:linear-gradient(90deg,var(--accent),#7df3ff);
+  clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);
+  transition:.22s;cursor:pointer;border:0;width:100%;font-family:var(--font);
+}
+.cta:hover{filter:brightness(1.12);box-shadow:0 0 26px rgba(0,232,255,.5)}
+.card.hot .cta{background:linear-gradient(90deg,var(--accent2),#ffb066)}
+/* ---------- 表格视图 ---------- */
+.tablebox{border:1px solid var(--line);background:linear-gradient(165deg,var(--panel),var(--panel2));overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:620px}
+thead th{
+  font-size:11px;letter-spacing:.16em;color:var(--accent);text-align:left;
+  padding:14px 18px;background:rgba(0,232,255,.06);border-bottom:1px solid var(--line);white-space:nowrap;
+}
+tbody td{padding:15px 18px;font-size:14px;border-bottom:1px solid rgba(255,255,255,.06);white-space:nowrap}
+tbody tr{transition:.2s}
+tbody tr:hover{background:rgba(0,232,255,.05)}
+td.money{font-weight:900;font-size:19px;color:#fff}
+td.money small{font-size:11px;color:var(--muted);margin-left:4px;font-weight:500}
+td.time{color:var(--accent)}
+.hide{display:none}
+/* ---------- 公告 + 页脚 ---------- */
+.notice{
+  margin:40px 0 10px;padding:16px 18px;border:1px solid var(--line);border-left:3px solid var(--accent2);
+  background:rgba(255,122,26,.045);font-size:13px;color:#b9cfe0;line-height:1.9;
+}
+.notice b{color:var(--accent2);letter-spacing:.1em;margin-right:8px}
+footer{
+  margin-top:44px;padding:26px 0 40px;border-top:1px solid var(--line);
+  text-align:center;font-size:12px;color:var(--muted);letter-spacing:.1em;
+}
+.toast{
+  position:fixed;left:50%;bottom:34px;transform:translate(-50%,24px);z-index:60;
+  background:#0d1a22;border:1px solid var(--accent);color:var(--accent);
+  padding:12px 20px;font-size:13px;letter-spacing:.06em;border-radius:4px;
+  opacity:0;pointer-events:none;transition:.3s;box-shadow:0 0 30px rgba(0,232,255,.35);
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:600px){
+  .head-right span.verno{display:none}
+  .card{padding:20px 16px}
+  .bar{justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="scan"></div>
+<header>
+  <div class="logo"><span class="dot"></span><span id="brand">NIGHTFALL</span></div>
+  <div class="head-right">
+    <span class="live"><i></i>在线接单</span>
+    <span class="verno">/ UPDATED 2025</span>
+  </div>
+</header>
+<div class="wrap">
+  <section class="hero">
+    <div class="kicker">◆ ESPORTS SERVICE ◆</div>
+    <h1 id="heroTitle">跑刀代肝 · 价目表</h1>
+    <p class="sub" id="heroSub"></p>
+    <div class="chips" id="chips"></div>
+  </section>
+  <div class="bar">
+    <div class="t">PRICE / 服务价目</div>
+    <div class="seg">
+      <button id="btnCard" class="on">卡片视图</button>
+      <button id="btnTable">表格视图</button>
+    </div>
+  </div>
+  <div id="cardView"></div>
+  <div id="tableView" class="tablebox hide"></div>
+  <div class="notice" id="notice"></div>
+  <footer id="footer"></footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* ============================================================================
+   ★★★ 只改这一块，整站文案 / 价格 / 颜色全部跟着变 ★★★
+   ----------------------------------------------------------------------------
+   brand     品牌名            heroTitle 大标题        heroSub 副标题
+   accent    主色（青）        accent2   辅色（橙）      unit 价格单位（米/元）
+   chips     标题下的卖点小标签
+   ctaLink   点击下单跳转地址
+   contact   联系方式（本版本不再弹出，仅保留配置）
+   notice    底部公告（HTML 可用 <b> <br>）
+   groups    分组 → items 明细：
+             name 档位 / insurance 保险 / price 价格（纯数字）
+             time 耗时 / tag 角标文字 / hot 是否高亮橙色
+   ============================================================================ */
+const CONFIG = {
+  brand: 'NIGHTFALL 纯币代肝',
+  heroTitle: '跑刀代肝 · 价目表',
+  heroSub: '专业代打 · 全程直播 · 按小时交付',
+  accent: '#00e8ff',
+  accent2: '#ff7a1a',
+  unit: '米',
+  ctaText: '立即下单',
+  ctaLink: "https://147369mm250.github.io/SH/?gist=bdbd989c08d5a57c5041f1cad39b4a5e",
+  contact: '微信 / QQ：请替换成你的联系方式',
+  chips: ['稳定接单', '全程录屏', '秒回消息'],
+  notice: '<b>下单须知</b>下单前请提供区服 + 服务订单/订单要求；支持先付一半 ；价格如有调整以最新公告为准。',
+  footer: '© 2026 NIGHTFALL · 石昊电竞，客服早8-晚10在线',
+  groups: [
+    {
+      title: '1000W 档位',
+      tag: '高额物资',
+      items: [
+        { name:'1000W', insurance:'九六格保险', price:45, time:'1-3小时左右', tag:'热销', hot:true },
+        { name:'1000W', insurance:'二四格保险', price:55, time:'1-4小时左右', tag:'' }
+      ]
+    },
+    {
+      title: '500W 档位',
+      tag: '性价比',
+      items: [
+        { name:'500W', insurance:'九六格保险', price:22.5, time:'1-2小时以内', tag:'推荐', hot:true },
+        { name:'500W', insurance:'二四格保险', price:26, time:'1-2小时左右', tag:'' }
+      ]
+    }
+  ]
+};
+/* ======================= 以下逻辑一般不用动 ======================= */
+const $ = s => document.querySelector(s);
+const root = document.documentElement;
+root.style.setProperty('--accent', CONFIG.accent);
+root.style.setProperty('--accent2', CONFIG.accent2);
+$('#brand').textContent   = CONFIG.brand;
+$('#heroTitle').textContent = CONFIG.heroTitle;
+$('#heroSub').textContent = CONFIG.heroSub;
+$('#notice').innerHTML    = CONFIG.notice;
+$('#footer').textContent  = CONFIG.footer;
+$('#chips').innerHTML     = CONFIG.chips.map(c => `<div class="chip">${c}</div>`).join('');
+const allItems = () => CONFIG.groups.flatMap(g => g.items.map(i => ({ ...i, group: g.title })));
+/* ---------- 卡片 ---------- */
+function cardHTML(it) {
+  const tag = it.tag ? `<div class="pill">${it.tag}</div>` : '';
+  return `
+  <article class="card ${it.hot ? 'hot' : ''}">
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+    <div class="card-top">
+      <div class="amount">${it.name}</div>${tag}
+    </div>
+    <div class="row"><span class="lbl">保险类型</span><span class="val">${it.insurance}</span></div>
+    <div class="price">
+      <span class="num" data-price="${it.price}">0</span>
+      <span class="unit">${CONFIG.unit}</span>
+    </div>
+    <div class="row"><span class="lbl">预计耗时</span><span class="val acc">${it.time}</span></div>
+    <button class="cta" data-cta>${CONFIG.ctaText}</button>
+  </article>`;
+}
+$('#cardView').innerHTML = CONFIG.groups.map(g => `
+  <section class="group">
+    <div class="group-head">
+      <h2>${g.title}</h2>${g.tag ? `<span class="group-tag">${g.tag}</span>` : ''}
+    </div>
+    <div class="cards">${g.items.map(cardHTML).join('')}</div>
+  </section>`).join('');
+/* ---------- 表格 ---------- */
+$('#tableView').innerHTML = `
+  <table>
+    <thead><tr><th>档位</th><th>保险类型</th><th>预计耗时</th><th>价格</th><th></th></tr></thead>
+    <tbody>
+      ${allItems().map(it => `
+        <tr>
+          <td><b>${it.name}</b></td>
+          <td>${it.insurance}</td>
+          <td class="time">${it.time}</td>
+          <td class="money"><span class="num" data-price="${it.price}">0</span><small>${CONFIG.unit}</small></td>
+          <td><button class="cta" style="margin:0;padding:9px 16px;clip-path:none;letter-spacing:.1em" data-cta>${CONFIG.ctaText}</button></td>
+        </tr>`).join('')}
+    </tbody>
+  </table>`;
+/* ---------- 视图切换 ---------- */
+$('#btnCard').onclick = () => {
+  $('#cardView').classList.remove('hide'); $('#tableView').classList.add('hide');
+  $('#btnCard').classList.add('on'); $('#btnTable').classList.remove('on');
+};
+$('#btnTable').onclick = () => {
+  $('#tableView').classList.remove('hide'); $('#cardView').classList.add('hide');
+  $('#btnTable').classList.add('on'); $('#btnCard').classList.remove('on');
+};
+/* ---------- 数字滚动 ---------- */
+function countUp(el) {
+  if (el.dataset.done) return;
+  el.dataset.done = '1';
+  const target = parseFloat(el.dataset.price);
+  const dec = String(target).includes('.') ? 1 : 0;
+  const dur = 900, t0 = performance.now();
+  (function step(t) {
+    const p = Math.min((t - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = (target * e).toFixed(dec);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toFixed(dec);
+  })(t0);
+}
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) countUp(e.target);
+}), { threshold: .4 });
+document.querySelectorAll('.num').forEach(n => io.observe(n));
+/* ---------- 鼠标光晕 ---------- */
+addEventListener('mousemove', e => {
+  root.style.setProperty('--mx', e.clientX + 'px');
+  root.style.setProperty('--my', e.clientY + 'px');
+});
+/* ---------- 卡片跟随倾斜 ---------- */
+document.querySelectorAll('.card').forEach(c => {
+  c.addEventListener('mousemove', e => {
+    const r = c.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top) / r.height - .5;
+    c.style.transform = `translateY(-7px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
+  });
+  c.addEventListener('mouseleave', () => c.style.transform = '');
+});
+/* ---------- 下单按钮：当前页面直接跳转 ---------- */
+document.addEventListener('click', e => {
+  if (!e.target.closest('[data-cta]')) return;
+  location.href = CONFIG.ctaLink;
+});
+</script>
+</body>
+</html>
